@@ -16,7 +16,6 @@ namespace GOOMPS
     {
         SphereCollider coll;
         GOOMPSCollision mngr;
-        bool isOn;
 
         void Start()
         {
@@ -27,15 +26,13 @@ namespace GOOMPS
         void OnEnable()
         {
             HarmonyPatches.ApplyHarmonyPatches();
-            isOn = true;
-            mngr.enabled = isOn;
+            if (mngr) mngr.enabled = true;
         }
 
         void OnDisable()
         {
             HarmonyPatches.RemoveHarmonyPatches();
-            isOn = false;
-            mngr.enabled = isOn;
+            if (mngr) mngr.enabled = false;
         }
 
         void OnGameInitialized(object sender, EventArgs e)
@@ -47,11 +44,6 @@ namespace GOOMPS
             coll.gameObject.AddComponent<TransformFollow>().transformToFollow = GorillaTagger.Instance.offlineVRRig.transform;
             coll.isTrigger = true;
             coll.radius = Cfg.radius.Value;
-        }
-
-        void FixedUpdate()
-        {
-            if (coll && coll.gameObject.activeSelf != isOn) coll.gameObject.SetActive(isOn);
         }
     }
 
